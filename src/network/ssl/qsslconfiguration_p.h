@@ -67,6 +67,7 @@
 #include "qsslcipher.h"
 #include "qsslkey.h"
 #include "qsslellipticcurve.h"
+#include "qssldiffiehellmanparameters.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -81,6 +82,7 @@ public:
           allowRootCertOnDemandLoading(true),
           peerSessionShared(false),
           sslOptions(QSslConfigurationPrivate::defaultSslOptions),
+          dhParams(QSslDiffieHellmanParameters::defaultParameters()),
           sslSessionTicketLifeTimeHint(-1),
           nextProtocolNegotiationStatus(QSslConfiguration::NextProtocolNegotiationNone)
     { }
@@ -109,6 +111,8 @@ public:
     Q_AUTOTEST_EXPORT static const QSsl::SslOptions defaultSslOptions;
 
     QVector<QSslEllipticCurve> ellipticCurves;
+
+    QSslDiffieHellmanParameters dhParams;
 
     QByteArray sslSession;
     int sslSessionTicketLifeTimeHint;

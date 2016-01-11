@@ -221,6 +221,8 @@ int q_BIO_read(BIO *a, void *b, int c);
 BIO_METHOD *q_BIO_s_mem();
 int q_BIO_write(BIO *a, const void *b, int c);
 int q_BN_num_bits(const BIGNUM *a);
+int q_BN_is_word(BIGNUM *a, BN_ULONG w);
+BN_ULONG q_BN_mod_word(const BIGNUM *a, BN_ULONG w);
 #ifndef OPENSSL_NO_EC
 const EC_GROUP* q_EC_KEY_get0_group(const EC_KEY* k);
 int q_EC_GROUP_get_degree(const EC_GROUP* g);
@@ -278,6 +280,7 @@ RSA *q_PEM_read_bio_RSAPrivateKey(BIO *a, RSA **b, pem_password_cb *c, void *d);
 #ifndef OPENSSL_NO_EC
 EC_KEY *q_PEM_read_bio_ECPrivateKey(BIO *a, EC_KEY **b, pem_password_cb *c, void *d);
 #endif
+DH *q_PEM_read_bio_DHparams(BIO *a, DH **b, pem_password_cb *c, void *d);
 int q_PEM_write_bio_DSAPrivateKey(BIO *a, DSA *b, const EVP_CIPHER *c, unsigned char *d,
                                   int e, pem_password_cb *f, void *g);
 int q_PEM_write_bio_RSAPrivateKey(BIO *a, RSA *b, const EVP_CIPHER *c, unsigned char *d,
@@ -466,6 +469,8 @@ STACK_OF(X509) *q_X509_STORE_CTX_get_chain(X509_STORE_CTX *ctx);
 DH *q_DH_new();
 void q_DH_free(DH *dh);
 DH *q_d2i_DHparams(DH **a, const unsigned char **pp, long length);
+int q_i2d_DHparams(DH *a, unsigned char **p);
+int q_DH_check(DH *dh, int *codes);
 
 BIGNUM *q_BN_bin2bn(const unsigned char *s, int len, BIGNUM *ret);
 #define q_SSL_CTX_set_tmp_dh(ctx, dh) q_SSL_CTX_ctrl((ctx), SSL_CTRL_SET_TMP_DH, 0, (char *)dh)
@@ -509,6 +514,9 @@ DSA *q_d2i_DSAPrivateKey(DSA **a, unsigned char **pp, long length);
 #define q_PEM_write_bio_DSAPrivateKey(bp,x,enc,kstr,klen,cb,u) \
         PEM_ASN1_write_bio((int (*)(void*, unsigned char**))q_i2d_DSAPrivateKey,PEM_STRING_DSA,\
                            bp,(char *)x,enc,kstr,klen,cb,u)
+#define q_PEM_read_bio_DHparams(bp, dh, cb, u) \
+        (DH *)q_PEM_ASN1_read_bio( \
+        (void *(*)(void**, const unsigned char**, long int))q_d2i_DHparams, PEM_STRING_DHPARAMS, bp, (void **)x, cb, u)
 #endif
 #define q_SSL_CTX_set_options(ctx,op) q_SSL_CTX_ctrl((ctx),SSL_CTRL_OPTIONS,(op),NULL)
 #define q_SSL_CTX_set_mode(ctx,op) q_SSL_CTX_ctrl((ctx),SSL_CTRL_MODE,(op),NULL)

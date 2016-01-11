@@ -63,6 +63,7 @@ class QSslCertificate;
 class QSslCipher;
 class QSslKey;
 class QSslEllipticCurve;
+class QSslDiffieHellmanParameters;
 
 class QSslConfigurationPrivate;
 class Q_NETWORK_EXPORT QSslConfiguration
@@ -132,6 +133,9 @@ public:
     QVector<QSslEllipticCurve> ellipticCurves() const;
     void setEllipticCurves(const QVector<QSslEllipticCurve> &curves);
     static QVector<QSslEllipticCurve> supportedEllipticCurves();
+
+    QSslDiffieHellmanParameters diffieHellmanParameters() const;
+    void setDiffieHellmanParameters(const QSslDiffieHellmanParameters &dhparams);
 
     static QSslConfiguration defaultConfiguration();
     static void setDefaultConfiguration(const QSslConfiguration &configuration);
